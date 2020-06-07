@@ -31,6 +31,7 @@ class Kiwoom(QAxWidget):
 
     def event_slots(self):
         self.OnEventConnect.connect(self.login_slot)
+        self.onReceiveTrData.connect(self.trDa)
 
     def signal_login_commConnect(self):
         self.dynamicCall("CommConnect()")
@@ -39,6 +40,10 @@ class Kiwoom(QAxWidget):
     def login_slot(self, err_code):
         print(errors(err_code)[1])
         self.login_event_loop.exit()
+
+    def trdata_slot(self, sScNo, sRQName, sTrCode, sRecordName, sPrevNext):
+        if sRQName == "예수금상세현황요청":
+            deposit = self.dynamicCall("GetCommData(QString, QString)")
 
     def get_account_info(self):
         account_list = self.dynamicCall("GetLoginInfo(Qstring)", "ACCNO") # 계좌번호 반환
